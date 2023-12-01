@@ -1,10 +1,9 @@
-/**
- * src/styles/settings.scss
- *
- * Configures SASS variables and Vuetify overwrites
- */
+.v-progress-linear__determinate,
+.v-progress-linear__indeterminate {
+    background: #FF458D !important;
+}
 
-// https://vuetifyjs.com/features/sass-variables/`
-// @use 'vuetify/settings' with (
-//   $color-pack: false
-// );
+
+.mdi-checkbox-marked::before {
+    color: #FF458D !important;
+}
