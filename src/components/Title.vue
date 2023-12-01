@@ -2,7 +2,7 @@
   <p>{{ text }}</p>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: ["text"],
 };
