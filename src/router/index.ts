@@ -7,7 +7,18 @@ const routes = [
     children: [
       {
         path: "",
-        name: "Clients",
+        name: "clients",
+        component: () => import("@/views/Clients.vue"),
+      },
+    ],
+  },
+  {
+    path: "/client/:id",
+    component: () => import("@/layouts/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "client",
         component: () => import("@/views/Clients.vue"),
       },
     ],

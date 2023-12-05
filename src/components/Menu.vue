@@ -14,6 +14,7 @@
         <v-list-item
           class="pt-3 pb-3"
           color="#FF458D"
+          :active="item.active.includes(String(router))"
           v-for="item in menuItems"
           :key="item.title"
           :to="item.to"
@@ -35,16 +36,38 @@ export default {
   data() {
     return {
       menuItems: [
-        { title: "Clientes", icon: "mdi-account-group-outline", to: "/" },
-        { title: "Produtos", icon: "mdi-package-variant", to: "/products" },
+        {
+          title: "Clientes",
+          icon: "mdi-account-group-outline",
+          to: "/",
+          active: ["clients", "client"],
+        },
+        {
+          title: "Produtos",
+          icon: "mdi-package-variant",
+          to: "/products",
+          active: ["products", "product"],
+        },
         {
           title: "Categorias",
           icon: "mdi-list-box-outline",
           to: "/categories",
+          active: ["categories", "category"],
         },
-        { title: "Pedidos", icon: "mdi-truck-fast-outline", to: "/orders" },
+        {
+          title: "Pedidos",
+          icon: "mdi-truck-fast-outline",
+          to: "/orders",
+          active: ["orders", "order", "master-order"],
+        },
       ],
+      router: this.$router.currentRoute.value.name,
     };
+  },
+  watch: {
+    $route(value) {
+      this.router = value.name;
+    },
   },
 };
 </script>
