@@ -1,19 +1,19 @@
 <template>
   <Content>
-    <Title class="mb-10" text="Clientes" />
+    <Title class="mb-10" text="Categorias" />
     <TableOptions
       :changeFilter="changeFilter"
-      router-name="client"
+      router-name="category"
       :changeLimit="changeLimit"
       :limit="limit"
     />
     <DeleteModal
       :active="modal"
       :change-active="changeModalState"
-      :deleteAction="deleteClientAction"
-      title="Tem certeza que deseja remover este cliente?"
-      description="Ao remover o cliente, você removerá todos pedidos vinculados a
-      ele!"
+      :deleteAction="deleteCategoryAction"
+      title="Tem certeza que deseja remover esta categoria?"
+      description="Ao remover a categoria, você removerá todas categorias dos produtos vinculados a
+      ela!"
     />
     <v-data-table
       :items="items"
@@ -23,7 +23,7 @@
       sort-asc-icon="mdi-menu-up"
       items-per-page-text="Items por página"
       :items-per-page="100"
-      no-data-text="Nenhum cliente encontrado"
+      no-data-text="Nenhuma categoria encontrado"
       :loading="loading"
       :headers="headers"
       :header-props="{ 'sort-icon': 'mdi-unfold-more-horizontal' }"
@@ -59,8 +59,8 @@ import Title from "@/components/Title.vue";
 import TableOptions from "@/components/TableOptions.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
 import Content from "@/layouts/Content.vue";
-import { deleteClient, getAllClients } from "@/services/routes";
-import { IGetAllClientsData } from "@/interfaces";
+import { deleteCategory, getAllCategories } from "@/services/routes";
+import { IGetAllCategoriesData } from "@/interfaces";
 import { formatDate } from "@/utils";
 import { useToast } from "vue-toastification";
 
@@ -69,11 +69,10 @@ export default {
   data() {
     return {
       loading: false,
-      items: [] as IGetAllClientsData[],
+      items: [] as IGetAllCategoriesData[],
       headers: [
         { title: "Nome", value: "name", sortable: true },
-        { title: "E-mail", value: "email", sortable: true },
-        { title: "Celular", value: "phone", sortable: true },
+        { title: "Status", value: "available", sortable: true },
         { title: "Última atualização", value: "updated_at", sortable: true },
         { text: "Ações", value: "actions" },
       ],
@@ -93,7 +92,7 @@ export default {
       const toast = useToast();
 
       this.loading = true;
-      const data = await getAllClients({
+      const data = await getAllCategories({
         limit: this.limit,
         page: this.page,
         sort: this.sort,
@@ -122,16 +121,15 @@ export default {
         this.limit = data.limit;
         this.maxPages = data.maxPages;
         this.page = data.page;
-        this.items = data.data.map((value: IGetAllClientsData) => ({
+        this.items = data.data.map((value: IGetAllCategoriesData) => ({
           ...value,
           updated_at: formatDate(value.updated_at),
-          email: value.email ?? "-",
-          phone: value.phone ?? "-",
+          available: value.available ? "Ativo" : "Não ativo",
         }));
       }
     },
     editItem(id: string) {
-      this.$router.push({ name: "client", params: { id } });
+      this.$router.push({ name: "category", params: { id } });
     },
     async changeFilter(filterValue: string) {
       this.filter = filterValue;
@@ -169,17 +167,17 @@ export default {
         this.deleteId = id;
       }
     },
-    async deleteClientAction() {
+    async deleteCategoryAction() {
       const toast = useToast();
 
-      await deleteClient(this.deleteId)
+      await deleteCategory(this.deleteId)
         .then((res) => {
           if (res.error)
             toast.error(res.message, {
               timeout: 3000,
             });
           else
-            toast.success("Cliente removido com sucesso!", {
+            toast.success("Categoria removida com sucesso!", {
               timeout: 2000,
             });
         })

@@ -12,3 +12,20 @@ export interface IGetAllClientsData {
 export interface IGetAllClients extends IGetList {
   data: IGetAllClientsData[];
 }
+
+export interface ICreateClient {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+export interface IChangeClient {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+
+export interface IGetClient {
+  id: string;
+}

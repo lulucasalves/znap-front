@@ -1,18 +1,18 @@
 <template>
   <Content>
-    <Title class="mb-10" text="Clientes" />
+    <Title class="mb-10" text="Produtos" />
     <TableOptions
-      :changeFilter="changeFilter"
-      router-name="client"
+      router-name="product"
       :changeLimit="changeLimit"
       :limit="limit"
+      :changeCategories="changeCategories"
     />
     <DeleteModal
       :active="modal"
       :change-active="changeModalState"
-      :deleteAction="deleteClientAction"
-      title="Tem certeza que deseja remover este cliente?"
-      description="Ao remover o cliente, você removerá todos pedidos vinculados a
+      :deleteAction="deleteProductAction"
+      title="Tem certeza que deseja remover este produto?"
+      description="Ao remover o produto, você removerá todos pedidos vinculados a
       ele!"
     />
     <v-data-table
@@ -23,7 +23,7 @@
       sort-asc-icon="mdi-menu-up"
       items-per-page-text="Items por página"
       :items-per-page="100"
-      no-data-text="Nenhum cliente encontrado"
+      no-data-text="Nenhum produto encontrado"
       :loading="loading"
       :headers="headers"
       :header-props="{ 'sort-icon': 'mdi-unfold-more-horizontal' }"
@@ -56,24 +56,25 @@
 
 <script lang="ts">
 import Title from "@/components/Title.vue";
-import TableOptions from "@/components/TableOptions.vue";
+import TableOptions from "@/components/TableOptionsProducts.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
 import Content from "@/layouts/Content.vue";
-import { deleteClient, getAllClients } from "@/services/routes";
-import { IGetAllClientsData } from "@/interfaces";
-import { formatDate } from "@/utils";
+import { IGetAllProductsData } from "@/interfaces";
+import { formatDate, formatMoney } from "@/utils";
 import { useToast } from "vue-toastification";
+import { deleteProduct, getAllProducts } from "@/services/routes";
 
 export default {
   components: { Title, Content, TableOptions, DeleteModal },
   data() {
     return {
       loading: false,
-      items: [] as IGetAllClientsData[],
+      items: [] as IGetAllProductsData[],
       headers: [
         { title: "Nome", value: "name", sortable: true },
-        { title: "E-mail", value: "email", sortable: true },
-        { title: "Celular", value: "phone", sortable: true },
+        { title: "Preço", value: "price", sortable: true },
+        { title: "Categoria", value: "category", sortable: false },
+        { title: "Status", value: "available", sortable: true },
         { title: "Última atualização", value: "updated_at", sortable: true },
         { text: "Ações", value: "actions" },
       ],
@@ -81,11 +82,11 @@ export default {
       limit: 15,
       maxPages: 1,
       page: 1,
-      filter: "",
       sort: "",
       order: "",
       modal: false,
       deleteId: "",
+      categories: [],
     };
   },
   methods: {
@@ -93,12 +94,12 @@ export default {
       const toast = useToast();
 
       this.loading = true;
-      const data = await getAllClients({
+      const data = await getAllProducts({
         limit: this.limit,
         page: this.page,
         sort: this.sort,
         order: this.order,
-        filter: this.filter,
+        categories: this.categories,
       })
         .then((res) => {
           if (res.error)
@@ -122,22 +123,17 @@ export default {
         this.limit = data.limit;
         this.maxPages = data.maxPages;
         this.page = data.page;
-        this.items = data.data.map((value: IGetAllClientsData) => ({
+        this.items = data.data.map((value: IGetAllProductsData) => ({
           ...value,
           updated_at: formatDate(value.updated_at),
-          email: value.email ?? "-",
-          phone: value.phone ?? "-",
+          price: formatMoney(value.price),
+          available: value.available ? "Ativo" : "Não ativo",
+          category: value.category_id.name,
         }));
       }
     },
     editItem(id: string) {
-      this.$router.push({ name: "client", params: { id } });
-    },
-    async changeFilter(filterValue: string) {
-      this.filter = filterValue;
-      this.page = 1;
-
-      await this.getData();
+      this.$router.push({ name: "product", params: { id } });
     },
     async updateTable(target: any) {
       const proxyObject = JSON.parse(JSON.stringify(target));
@@ -162,6 +158,10 @@ export default {
       this.page = 1;
       await this.getData();
     },
+    async changeCategories(categories: any) {
+      this.categories = categories;
+      await this.getData();
+    },
     changeModalState(value: boolean, id: string) {
       this.modal = value;
 
@@ -169,17 +169,17 @@ export default {
         this.deleteId = id;
       }
     },
-    async deleteClientAction() {
+    async deleteProductAction() {
       const toast = useToast();
 
-      await deleteClient(this.deleteId)
+      await deleteProduct(this.deleteId)
         .then((res) => {
           if (res.error)
             toast.error(res.message, {
               timeout: 3000,
             });
           else
-            toast.success("Cliente removido com sucesso!", {
+            toast.success("Produto removido com sucesso!", {
               timeout: 2000,
             });
         })
@@ -201,28 +201,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.icon-button {
-  padding: 5px;
-  border-radius: 4px;
-  background: rgba(255, 68, 142, 0.1);
-  width: fit-content;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.icon-button i {
-  font-size: 24px;
-  color: rgba(255, 68, 142, 1);
-}
-
-.icon-button:hover {
-  opacity: 0.8;
-}
-
-.icons-div {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-</style>
+<style scoped></style>

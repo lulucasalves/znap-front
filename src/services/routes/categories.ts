@@ -1,20 +1,21 @@
 import {
-  IChangeClient,
-  ICreateClient,
-  IGetAllClients,
-  IGetClient,
+  IGetAllCategories,
+  IGetCategory,
+  IPostCategory,
+  IPutCategory,
   IRequestGetList,
 } from "@/interfaces";
 import { app } from "../app";
 
-export function getAllClients({
+export function getAllCategories({
   limit,
   page,
   sort,
   order,
   filter,
+  active,
 }: IRequestGetList) {
-  let router = `/clients?page=${page}`;
+  let router = `/categories?page=${page}`;
 
   if (limit) {
     router += `&&limit=${limit}`;
@@ -32,8 +33,12 @@ export function getAllClients({
     router += `&&filter=${filter}`;
   }
 
+  if (active) {
+    router += `&&active=${active}`;
+  }
+
   return app
-    .get<IGetAllClients>(router)
+    .get<IGetAllCategories>(router)
     .then((response) => {
       return response.data;
     })
@@ -42,9 +47,9 @@ export function getAllClients({
     });
 }
 
-export function deleteClient(id: string) {
+export function deleteCategory(id: string) {
   return app
-    .delete(`/client/${id}`)
+    .delete(`/category/${id}`)
     .then((response) => {
       return response.data;
     })
@@ -53,9 +58,9 @@ export function deleteClient(id: string) {
     });
 }
 
-export function postClient({ name, email, phone }: ICreateClient) {
+export function postCategory({ name, available }: IPostCategory) {
   return app
-    .post(`/client`, { name, email, phone })
+    .post(`/category`, { name, available })
     .then((response) => {
       return response.data;
     })
@@ -64,9 +69,9 @@ export function postClient({ name, email, phone }: ICreateClient) {
     });
 }
 
-export function putClient({ name, email, phone, id }: IChangeClient) {
+export function putCategory({ name, available, id }: IPutCategory) {
   return app
-    .put(`/client/${id}`, { name, email, phone })
+    .put(`/category/${id}`, { name, available })
     .then((response) => {
       return response.data;
     })
@@ -75,9 +80,9 @@ export function putClient({ name, email, phone, id }: IChangeClient) {
     });
 }
 
-export function getClient({ id }: IGetClient) {
+export function getCategory({ id }: IGetCategory) {
   return app
-    .get(`/client/${id}`)
+    .get(`/category/${id}`)
     .then((response) => {
       return response.data;
     })

@@ -13,11 +13,12 @@
         density="compact"
         v-model="search"
         append-icon="mdi-magnify"
+        @click:clear="executeSearch"
         @click:append="executeSearch"
         label="Pesquisar"
       />
     </div>
-    <v-btn @click="create" color="#FF458D" variant="outlined"> Criar </v-btn>
+    <v-btn @click="create" color="primary" variant="outlined"> Criar </v-btn>
   </div>
 </template>
 

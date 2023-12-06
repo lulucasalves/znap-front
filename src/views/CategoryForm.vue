@@ -1,9 +1,9 @@
 <template>
-  <ClientsContent />
+  <CategoryForm />
 </template>
 
 <script setup lang="ts">
-import ClientsContent from "@/components/ClientsContent.vue";
+import CategoryForm from "@/components/CategoryForm.vue";
 </script>
 
 <style scoped></style>

@@ -11,4 +11,5 @@ export interface IRequestGetList {
   sort?: string;
   order?: string;
   filter?: string;
+  active?: string;
 }

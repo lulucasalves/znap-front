@@ -19,7 +19,51 @@ const routes = [
       {
         path: "",
         name: "client",
-        component: () => import("@/views/Clients.vue"),
+        component: () => import("@/views/ClientForm.vue"),
+      },
+    ],
+  },
+  {
+    path: "/categories",
+    component: () => import("@/layouts/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "categories",
+        component: () => import("@/views/Categories.vue"),
+      },
+    ],
+  },
+  {
+    path: "/category/:id",
+    component: () => import("@/layouts/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "category",
+        component: () => import("@/views/CategoryForm.vue"),
+      },
+    ],
+  },
+  {
+    path: "/products",
+    component: () => import("@/layouts/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "products",
+        component: () => import("@/views/Products.vue"),
+      },
+    ],
+  },
+  {
+    path: "/product/:id",
+    component: () => import("@/layouts/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "product",
+        component: () => import("@/views/ProductForm.vue"),
       },
     ],
   },

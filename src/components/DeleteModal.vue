@@ -4,21 +4,20 @@
     @update:model-value="changeActive"
     width="auto"
   >
-    <v-card>
+    <v-card class="delete-modal">
       <v-card-title class="text-h5">
         {{ title }}
       </v-card-title>
-      <v-card-text>{{ description }}</v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
+      <p class="description">{{ description }}</p>
+      <v-card-actions class="buttons-group">
         <v-btn
-          color="green-darken-1"
-          variant="text"
+          color="gray"
+          variant="outlined"
           @click="changeActive && changeActive(false)"
         >
           Cancelar
         </v-btn>
-        <v-btn color="green-darken-1" variant="text" @click="deleteAction">
+        <v-btn color="primary" variant="outlined" @click="deleteAction">
           Remover
         </v-btn>
       </v-card-actions>
@@ -39,4 +38,23 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.delete-modal {
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  justify-content: center;
+  border-radius: 12px !important;
+}
+
+.description {
+  margin: 20px 0;
+}
+
+.buttons-group{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+</style>

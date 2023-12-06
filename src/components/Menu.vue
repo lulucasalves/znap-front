@@ -13,7 +13,7 @@
       <v-list-item-group>
         <v-list-item
           class="pt-3 pb-3"
-          color="#FF458D"
+          color="primary"
           :active="item.active.includes(String(router))"
           v-for="item in menuItems"
           :key="item.title"

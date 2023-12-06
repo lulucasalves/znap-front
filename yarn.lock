@@ -17,7 +17,7 @@
   resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.22.20.tgz#c4ae002c61d2879e724581d96665583dbc1dc0e0"
   integrity sha512-Y4OZ+ytlatR8AI+8KZfKuL5urKp7qey08ha31L8b3BwewJAoJamTzyvxPR/5D+KkdJCGPq/+8TukHBlY10FX9A==
 
-"@babel/parser@^7.23.3":
+"@babel/parser@^7.18.4", "@babel/parser@^7.23.3":
   version "7.23.5"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.23.5.tgz#37dee97c4752af148e1d38c34b856b2507660563"
   integrity sha512-hOOqoiNXrmGdFbhgCzu6GiURxUgM27Xwd/aPuu8RfHEZPBzL1Z54okAHAQjXfcQNwvrlkAmAp4SlRTZ45vlthQ==
@@ -240,6 +240,13 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.5.6.tgz#c65b2bfce1bec346582c07724e3f8c1017a20339"
   integrity sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==
 
+"@types/vue-the-mask@^0.11.5":
+  version "0.11.5"
+  resolved "https://registry.yarnpkg.com/@types/vue-the-mask/-/vue-the-mask-0.11.5.tgz#d39ae9d03bed0f0c625e2669807a06bcfd2f62f1"
+  integrity sha512-kO47HeoXxzBgJUK70CihEXgsyPrB1uTinFBc/R2gubD62zMV/dSg7XhFbnEF1zcRKA9MBDGVZm3VicmSFDngdQ==
+  dependencies:
+    vue "^2.6.10"
+
 "@typescript-eslint/eslint-plugin@^5.59.1":
   version "5.62.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-5.62.0.tgz#aeef0328d172b9e37d9bab6dbc13b87ed88977db"
@@ -373,6 +380,15 @@
   dependencies:
     "@vue/compiler-core" "3.3.9"
     "@vue/shared" "3.3.9"
+
+"@vue/compiler-sfc@2.7.15":
+  version "2.7.15"
+  resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-2.7.15.tgz#62135fb2f69559fc723fd9c56b8e8b0ac7864a0b"
+  integrity sha512-FCvIEevPmgCgqFBH7wD+3B97y7u7oj/Wr69zADBf403Tui377bThTjBvekaZvlRr4IwUAu3M6hYZeULZFJbdYg==
+  dependencies:
+    "@babel/parser" "^7.18.4"
+    postcss "^8.4.14"
+    source-map "^0.6.1"
 
 "@vue/compiler-sfc@3.3.9":
   version "3.3.9"
@@ -665,7 +681,7 @@ cssesc@^3.0.0:
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
 
-csstype@^3.1.2:
+csstype@^3.1.0, csstype@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
@@ -1231,7 +1247,7 @@ muggle-string@^0.3.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.3.1.tgz#e524312eb1728c63dd0b2ac49e3282e6ed85963a"
   integrity sha512-ckmWDJjphvd/FvZawgygcUeQCxzvohjFO5RxTjj4eq8kw359gFF3E1brjfI+viLMxss5JrHTDRHZvu2/tuy0Qg==
 
-nanoid@^3.3.6:
+nanoid@^3.3.6, nanoid@^3.3.7:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.7.tgz#d0c301a691bc8d54efa0a2226ccf3fe2fd656bd8"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
@@ -1367,6 +1383,15 @@ postcss-selector-parser@^6.0.13:
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
 
+postcss@^8.4.14:
+  version "8.4.32"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.32.tgz#1dac6ac51ab19adb21b8b34fd2d93a86440ef6c9"
+  integrity sha512-D/kj5JNu6oo2EIy+XL/26JEDTlIbB8hw85G8StOE6L74RQAVVP5rej6wxCNqyMbR4RkPfqvezVbPw81Ngd6Kcw==
+  dependencies:
+    nanoid "^3.3.7"
+    picocolors "^1.0.0"
+    source-map-js "^1.0.2"
+
 postcss@^8.4.27, postcss@^8.4.31:
   version "8.4.31"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.31.tgz#92b451050a9f914da6755af352bdc0192508656d"
@@ -1481,6 +1506,11 @@ slash@^3.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
+
+source-map@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
+  integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
 strip-ansi@^6.0.1:
   version "6.0.1"
@@ -1635,6 +1665,16 @@ vue-template-compiler@^2.7.14:
     de-indent "^1.0.2"
     he "^1.2.0"
 
+vue-the-mask@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/vue-the-mask/-/vue-the-mask-0.11.1.tgz#91ee01008354ae57bccc79bb61b65f32d971d9d5"
+  integrity sha512-UquSfnSWejD0zAfcD+3jJ1chUAkOAyoxya9Lxh9acCRtrlmGcAIvd0cQYraWqKenbuZJUdum+S174atv2AuEHQ==
+
+vue-toastification@^2.0.0-rc.5:
+  version "2.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/vue-toastification/-/vue-toastification-2.0.0-rc.5.tgz#92798604d806ae473cfb76ed776fae294280f8f8"
+  integrity sha512-q73e5jy6gucEO/U+P48hqX+/qyXDozAGmaGgLFm5tXX4wJBcVsnGp4e/iJqlm9xzHETYOilUuwOUje2Qg1JdwA==
+
 vue-tsc@^1.2.0:
   version "1.8.24"
   resolved "https://registry.yarnpkg.com/vue-tsc/-/vue-tsc-1.8.24.tgz#ca3de095e08da27fd824f8f4931425c018106280"
@@ -1643,6 +1683,14 @@ vue-tsc@^1.2.0:
     "@volar/typescript" "~1.11.1"
     "@vue/language-core" "1.8.24"
     semver "^7.5.4"
+
+vue@^2.6.10:
+  version "2.7.15"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.7.15.tgz#94cd34e6e9f22cd2d35a02143f96a5beac1c1f54"
+  integrity sha512-a29fsXd2G0KMRqIFTpRgpSbWaNBK3lpCTOLuGLEDnlHWdjB8fwl6zyYZ8xCrqkJdatwZb4mGHiEfJjnw0Q6AwQ==
+  dependencies:
+    "@vue/compiler-sfc" "2.7.15"
+    csstype "^3.1.0"
 
 vue@^3.2.0:
   version "3.3.9"
