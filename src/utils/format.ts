@@ -24,9 +24,15 @@ export function formatDateOrder(value: string) {
 }
 
 export function formatDateOrderSend(value: string) {
-  const [day, month, year] = value.split("/");
+  try {
+    const [day, month, year] = value.split("/");
 
-  return `${year}-${month}-${day}`;
+    if (day && month && year) return `${year}-${month}-${day}`;
+
+    return "";
+  } catch (err) {
+    return "";
+  }
 }
 
 export function getCurrentDate() {

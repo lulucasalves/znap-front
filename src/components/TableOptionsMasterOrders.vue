@@ -1,14 +1,28 @@
 <template>
   <div class="filter">
     <div class="filter-div">
-      <v-select
-        :items="[15, 30, 50, 100]"
-        density="compact"
-        label="Max"
-        :model-value="limit"
-        @update:model-value="changeLimit"
-      />
       <div class="select-div">
+        <v-text-field
+          clearable
+          density="compact"
+          v-model="dateFrom"
+          label="Data de"
+          @input="maskDateFrom"
+        />
+        <v-text-field
+          clearable
+          density="compact"
+          v-model="dateTo"
+          label="Data até"
+          @input="maskDateTo"
+        />
+        <v-select
+          :items="[15, 30, 50, 100]"
+          density="compact"
+          label="Max"
+          :model-value="limit"
+          @update:model-value="changeLimit"
+        />
         <v-select
           v-model="categoriesSelected"
           :items="categories"
@@ -37,16 +51,24 @@
           placeholder="Todos clientes"
         />
         <v-btn
+          class="filter-button"
           height="40px"
           color="primary"
           variant="tonal"
           @click="sendFilter"
         >
-          <v-icon>mdi-magnify</v-icon>
+          Filtrar
         </v-btn>
       </div>
     </div>
-    <v-btn @click="create" color="primary" variant="outlined"> Criar </v-btn>
+    <v-btn
+      class="create-button"
+      @click="create"
+      color="primary"
+      variant="outlined"
+    >
+      Criar
+    </v-btn>
   </div>
 </template>
 
@@ -57,6 +79,7 @@ import {
   IGetAllClientsData,
   IGetAllProductsData,
 } from "@/interfaces";
+import { formatDateOrderSend } from "@/utils";
 
 export default {
   name: "TableOptions",
@@ -77,6 +100,8 @@ export default {
       clients: [],
       clientsSelected: [],
       allClients: [],
+      dateFrom: "",
+      dateTo: "",
     };
   },
   methods: {
@@ -102,13 +127,53 @@ export default {
         )
         .map((value: IGetAllClientsData) => value.id);
 
+      const dateFrom = formatDateOrderSend(this.dateFrom);
+      const dateTo = formatDateOrderSend(this.dateTo);
+
       this.changeFilter!({
         categories: getIdsCategories,
         products: getIdsProducts,
         clients: getIdsClients,
+        dateFrom,
+        dateTo,
       });
     },
+    maskDateTo(value: any) {
+      const dateValue = value.target.value.replace(/\D/g, "");
+
+      if (!dateValue) {
+        this.dateTo = "";
+        return;
+      }
+
+      const formattedDate = (date: string) => {
+        const day = date.substring(0, 2);
+        const month = date.substring(2, 4);
+        const year = date.substring(4, 8);
+        return `${day}/${month}/${year}`;
+      };
+
+      this.dateTo = formattedDate(dateValue);
+    },
+    maskDateFrom(value: any) {
+      const dateValue = value.target.value.replace(/\D/g, "");
+
+      if (!dateValue) {
+        this.dateFrom = "";
+        return;
+      }
+
+      const formattedDate = (date: string) => {
+        const day = date.substring(0, 2);
+        const month = date.substring(2, 4);
+        const year = date.substring(4, 8);
+        return `${day}/${month}/${year}`;
+      };
+
+      this.dateFrom = formattedDate(dateValue);
+    },
   },
+
   async mounted() {
     const dataCategories = await getAllCategories({
       page: 1,
@@ -152,7 +217,8 @@ export default {
 <style scoped>
 .filter {
   display: flex;
-  justify-content: space-between;
+  align-items: end;
+  flex-direction: column;
   width: 100%;
   gap: 30px;
 }
@@ -165,7 +231,7 @@ export default {
 }
 
 .v-input {
-  max-width: 300px;
+  width: 200px;
 }
 
 .v-select:first-child {
@@ -176,5 +242,15 @@ export default {
   width: 100%;
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.create-button {
+  width: fit-content;
+  text-align: right;
+}
+
+.filter-button {
+  width: 100%;
 }
 </style>

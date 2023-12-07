@@ -89,6 +89,17 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/orders/:id",
+    component: () => import("@/layouts/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "orders",
+        component: () => import("@/views/Orders.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({

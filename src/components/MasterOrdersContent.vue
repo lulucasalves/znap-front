@@ -33,7 +33,7 @@
     >
       <template v-slot:item.actions="{ item }">
         <div class="icons-div">
-          <div @click="editItem(item.id)" class="icon-button">
+          <div @click="seeMore(item.id)" class="icon-button">
             <p>Mais detalhes</p>
           </div>
           <div @click="editItem(item.id)" class="icon-button">
@@ -138,6 +138,10 @@ export default {
         });
 
       if (data) {
+        this.selectedItems = this.selectedItems.filter((value) =>
+          data.data.find((valueData) => valueData.id === value)
+        );
+
         this.count = data.count;
         this.limit = data.limit;
         this.maxPages = data.maxPages;
@@ -156,6 +160,9 @@ export default {
     },
     editItem(id: string) {
       this.$router.push({ name: "master-order", params: { id } });
+    },
+    seeMore(id: string) {
+      this.$router.push({ name: "orders", params: { id } });
     },
     async updateTable(target: any) {
       const proxyObject = JSON.parse(JSON.stringify(target));
@@ -184,14 +191,20 @@ export default {
       categories,
       products,
       clients,
+      dateTo,
+      dateFrom,
     }: {
       products: never[];
       categories: never[];
       clients: never[];
+      dateTo: string;
+      dateFrom: string;
     }) {
       this.categories = categories;
       this.products = products;
       this.clients = clients;
+      this.dateTo = dateTo;
+      this.dateFrom = dateFrom;
 
       await this.getData();
     },

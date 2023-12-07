@@ -12,11 +12,17 @@
         clearable
         density="compact"
         v-model="search"
-        append-icon="mdi-magnify"
-        @click:clear="executeSearch"
-        @click:append="executeSearch"
         label="Pesquisar"
       />
+      <v-btn
+        class="filter-button"
+        height="40px"
+        color="primary"
+        variant="tonal"
+        @click="changeFilterSearch"
+      >
+        Filtrar
+      </v-btn>
     </div>
     <v-btn @click="create" color="primary" variant="outlined"> Criar </v-btn>
   </div>
@@ -38,13 +44,11 @@ export default {
   },
 
   methods: {
-    executeSearch() {
-      if (typeof this.changeFilter === "function") {
-        this.changeFilter(this.search);
-      }
-    },
     create() {
       this.$router.push({ name: this.routerName, params: { id: "new" } });
+    },
+    changeFilterSearch() {
+      this.changeFilter!(this.search);
     },
   },
 };
@@ -53,7 +57,8 @@ export default {
 <style scoped>
 .filter {
   display: flex;
-  justify-content: space-between;
+  align-items: end;
+  flex-direction: column;
   width: 100%;
   gap: 30px;
 }
@@ -63,13 +68,19 @@ export default {
   align-items: center;
   gap: 20px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .v-input {
-  max-width: 300px;
+  width: 200px;
 }
 
-.v-select {
-  max-width: 100px;
+.create-button {
+  width: fit-content;
+  text-align: right;
+}
+
+.filter-button {
+  width: 100%;
 }
 </style>

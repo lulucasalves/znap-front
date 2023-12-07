@@ -1,14 +1,14 @@
 <template>
   <div class="filter">
     <div class="filter-div">
-      <v-select
-        :items="[15, 30, 50, 100]"
-        density="compact"
-        label="Max"
-        :model-value="limit"
-        @update:model-value="changeLimit"
-      />
       <div class="select-div">
+        <v-select
+          :items="[15, 30, 50, 100]"
+          density="compact"
+          label="Max"
+          :model-value="limit"
+          @update:model-value="changeLimit"
+        />
         <v-select
           v-model="categoriesSelected"
           :items="categories"
@@ -19,12 +19,13 @@
           placeholder="Todas categorias"
         />
         <v-btn
+          class="filter-button"
           height="40px"
           color="primary"
           variant="tonal"
-          @click="categoriesSend"
+          @click="changeCategories"
         >
-          <v-icon>mdi-magnify</v-icon>
+          Filtrar
         </v-btn>
       </div>
     </div>
@@ -95,7 +96,8 @@ export default {
 <style scoped>
 .filter {
   display: flex;
-  justify-content: space-between;
+  align-items: end;
+  flex-direction: column;
   width: 100%;
   gap: 30px;
 }
@@ -108,7 +110,7 @@ export default {
 }
 
 .v-input {
-  max-width: 800px;
+  width: 200px;
 }
 
 .v-select:first-child {
@@ -119,5 +121,15 @@ export default {
   width: 100%;
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.create-button {
+  width: fit-content;
+  text-align: right;
+}
+
+.filter-button {
+  width: 100%;
 }
 </style>
