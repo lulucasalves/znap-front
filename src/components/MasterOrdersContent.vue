@@ -56,6 +56,7 @@
         </div>
       </template>
     </v-data-table>
+    <ReportTotal :totalValues="totalValues" />
   </Content>
 </template>
 
@@ -63,6 +64,7 @@
 import Title from "@/components/Title.vue";
 import TableOptions from "@/components/TableOptionsMasterOrders.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
+import ReportTotal from "@/components/ReportTotal.vue";
 import Content from "@/layouts/Content.vue";
 import { IGetAllMasterOrdersData } from "@/interfaces";
 import { formatDate, formatMoney, formatDateOrder, parseMoney } from "@/utils";
@@ -70,7 +72,7 @@ import { useToast } from "vue-toastification";
 import { deleteMasterOrder, getAllMasterOrders } from "@/services";
 
 export default {
-  components: { Title, Content, TableOptions, DeleteModal },
+  components: { Title, Content, TableOptions, DeleteModal, ReportTotal },
   data() {
     return {
       loading: false,
