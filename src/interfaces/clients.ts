@@ -25,7 +25,3 @@ export interface IChangeClient {
   email: string;
   phone: string;
 }
-
-export interface IGetClient {
-  id: string;
-}

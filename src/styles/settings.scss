@@ -22,16 +22,22 @@
     width: fit-content;
     cursor: pointer;
     transition: 0.3s;
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    i {
+        font-size: 24px;
+        color: rgba(255, 68, 142, 1);
+    }
+
+    p {
+        color: rgba(255, 68, 142, 1);
+    }
 }
 
-.icon-button i {
-    font-size: 24px;
-    color: rgba(255, 68, 142, 1);
-}
 
-.icon-button:hover {
-    opacity: 0.8;
-}
 
 .icons-div {
     display: flex;

@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { getAllCategories } from "@/services/routes";
+import { getAllCategories } from "@/services";
 import { useToast } from "vue-toastification";
 import { IGetAllCategoriesData } from "@/interfaces";
 
@@ -70,6 +70,7 @@ export default {
       limit: 1000,
       sort: "asc",
       order: "name",
+      active: "true",
     })
       .then((res) => {
         if (res.error)

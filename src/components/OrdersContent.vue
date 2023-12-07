@@ -1,18 +1,18 @@
 <template>
   <Content>
-    <Title class="mb-10" text="Produtos" />
+    <Title class="mb-10" text="Detalhes do pedido" />
     <TableOptions
-      router-name="product"
+      router-name="master-order"
       :changeLimit="changeLimit"
       :limit="limit"
-      :changeCategories="changeCategories"
+      :changeFilter="changeFilter"
     />
     <DeleteModal
       :active="modal"
       :change-active="changeModalState"
-      :deleteAction="deleteProductAction"
-      title="Tem certeza que deseja remover este produto?"
-      description="Ao remover o produto, você removerá todos pedidos vinculados a
+      :deleteAction="deleteMasterOrderAction"
+      title="Tem certeza que deseja remover este pedido?"
+      description="Ao remover o pedido, você removerá todos produtos no carrinho de compras vinculados a
       ele!"
     />
     <v-data-table
@@ -31,6 +31,9 @@
     >
       <template v-slot:item.actions="{ item }">
         <div class="icons-div">
+          <div @click="editItem(item.id)" class="icon-button">
+            <p>Mais detalhes</p>
+          </div>
           <div @click="editItem(item.id)" class="icon-button">
             <v-icon> mdi-pencil-outline </v-icon>
           </div>
@@ -56,25 +59,31 @@
 
 <script lang="ts">
 import Title from "@/components/Title.vue";
-import TableOptions from "@/components/TableOptionsProducts.vue";
+import TableOptions from "@/components/TableOptionsMasterOrders.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
 import Content from "@/layouts/Content.vue";
-import { IGetAllProductsData } from "@/interfaces";
-import { formatDate, formatMoney } from "@/utils";
+import { IGetAllMasterOrdersData } from "@/interfaces";
+import { formatDate, formatMoney, formatDateOrder } from "@/utils";
 import { useToast } from "vue-toastification";
-import { deleteProduct, getAllProducts } from "@/services";
+import {
+  deleteMasterOrder,
+  deleteProduct,
+  getAllMasterOrders,
+} from "@/services";
 
 export default {
   components: { Title, Content, TableOptions, DeleteModal },
   data() {
     return {
       loading: false,
-      items: [] as IGetAllProductsData[],
+      items: [] as IGetAllMasterOrdersData[],
       headers: [
-        { title: "Nome", value: "name", sortable: true },
-        { title: "Preço", value: "price", sortable: true },
-        { title: "Categoria", value: "category", sortable: false },
-        { title: "Status", value: "available", sortable: true },
+        { title: "Cliente", value: "client", sortable: false },
+        { title: "Produtos", value: "total_quantity", sortable: true },
+        { title: "Frete", value: "shipping", sortable: true },
+        { title: "Preço total", value: "total_price", sortable: true },
+        { title: "Preço médio", value: "average_price", sortable: true },
+        { title: "Data do pedido", value: "date", sortable: true },
         { title: "Última atualização", value: "updated_at", sortable: true },
         { text: "Ações", value: "actions" },
       ],
@@ -87,6 +96,10 @@ export default {
       modal: false,
       deleteId: "",
       categories: [],
+      clients: [],
+      products: [],
+      dateTo: "",
+      dateFrom: "",
     };
   },
   methods: {
@@ -94,12 +107,16 @@ export default {
       const toast = useToast();
 
       this.loading = true;
-      const data = await getAllProducts({
+      const data = await getAllMasterOrders({
         limit: this.limit,
         page: this.page,
         sort: this.sort,
         order: this.order,
         categories: this.categories,
+        clients: this.clients,
+        dateFrom: this.dateFrom,
+        dateTo: this.dateTo,
+        products: this.products,
       })
         .then((res) => {
           if (res.error)
@@ -123,17 +140,20 @@ export default {
         this.limit = data.limit;
         this.maxPages = data.maxPages;
         this.page = data.page;
-        this.items = data.data.map((value: IGetAllProductsData) => ({
+        this.items = data.data.map((value: IGetAllMasterOrdersData) => ({
           ...value,
           updated_at: formatDate(value.updated_at),
-          price: formatMoney(value.price),
-          available: value.available ? "Ativo" : "Não ativo",
-          category: value.category_id.name,
+          total_price: formatMoney(parseFloat(value.total_price)),
+          average_price: formatMoney(parseFloat(value.average_price)),
+          shipping: formatMoney(value.shipping),
+          client: value.client.name,
+          total_quantity: !value.total_quantity ? "0" : value.total_quantity,
+          date: formatDateOrder(value.date),
         }));
       }
     },
     editItem(id: string) {
-      this.$router.push({ name: "product", params: { id } });
+      this.$router.push({ name: "master-order", params: { id } });
     },
     async updateTable(target: any) {
       const proxyObject = JSON.parse(JSON.stringify(target));
@@ -158,10 +178,22 @@ export default {
       this.page = 1;
       await this.getData();
     },
-    async changeCategories(categories: any) {
+    async changeFilter({
+      categories,
+      products,
+      clients,
+    }: {
+      products: never[];
+      categories: never[];
+      clients: never[];
+    }) {
       this.categories = categories;
+      this.products = products;
+      this.clients = clients;
+
       await this.getData();
     },
+
     changeModalState(value: boolean, id: string) {
       this.modal = value;
 
@@ -169,17 +201,17 @@ export default {
         this.deleteId = id;
       }
     },
-    async deleteProductAction() {
+    async deleteMasterOrderAction() {
       const toast = useToast();
 
-      await deleteProduct(this.deleteId)
+      await deleteMasterOrder(this.deleteId)
         .then((res) => {
           if (res.error)
             toast.error(res.message, {
               timeout: 3000,
             });
           else
-            toast.success("Produto removido com sucesso!", {
+            toast.success("Pedido removido com sucesso!", {
               timeout: 2000,
             });
         })

@@ -57,8 +57,8 @@ export default {
         {
           title: "Pedidos",
           icon: "mdi-truck-fast-outline",
-          to: "/orders",
-          active: ["orders", "order", "master-order"],
+          to: "/master-orders",
+          active: ["master-orders", "orders", "order", "master-order"],
         },
       ],
       router: this.$router.currentRoute.value.name,

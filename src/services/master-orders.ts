@@ -1,20 +1,24 @@
 import {
-  IChangeProduct,
-  ICreateProduct,
-  IGetAllProducts,
-  IRequestGetListProducts,
+  IChangeMasterOrder,
+  ICreateMasterOrder,
+  IGetAllMasterOrders,
+  IRequestGetListMasterOrders,
 } from "@/interfaces";
-import { app } from "../app";
+import { app } from "./app";
 
-export function getAllProducts({
+export function getAllMasterOrders({
   limit,
   page,
   sort,
   order,
   filter,
   categories,
-}: IRequestGetListProducts) {
-  let router = `/products?page=${page}`;
+  clients,
+  products,
+  dateFrom,
+  dateTo,
+}: IRequestGetListMasterOrders) {
+  let router = `/master-orders?page=${page}`;
 
   if (limit) {
     router += `&&limit=${limit}`;
@@ -32,12 +36,28 @@ export function getAllProducts({
     router += `&&filter=${filter}`;
   }
 
+  if (dateTo) {
+    router += `&&dateTo=${dateTo}`;
+  }
+
+  if (dateFrom) {
+    router += `&&dateFrom=${dateFrom}`;
+  }
+
   if (categories.length) {
     router += `&&categories=${categories.join(",")}`;
   }
 
+  if (clients.length) {
+    router += `&&clients=${clients.join(",")}`;
+  }
+
+  if (products.length) {
+    router += `&&products=${products.join(",")}`;
+  }
+
   return app
-    .get<IGetAllProducts>(router)
+    .get<IGetAllMasterOrders>(router)
     .then((response) => {
       return response.data;
     })
@@ -46,9 +66,9 @@ export function getAllProducts({
     });
 }
 
-export function deleteProduct(id: string) {
+export function deleteMasterOrder(id: string) {
   return app
-    .delete(`/product/${id}`)
+    .delete(`/master-order/${id}`)
     .then((response) => {
       return response.data;
     })
@@ -57,14 +77,9 @@ export function deleteProduct(id: string) {
     });
 }
 
-export function postProduct({
-  name,
-  price,
-  category_id,
-  available,
-}: ICreateProduct) {
+export function getMasterOrder(id: string) {
   return app
-    .post(`/product`, { name, price, category_id, available })
+    .get(`/master-order/${id}`)
     .then((response) => {
       return response.data;
     })
@@ -73,26 +88,25 @@ export function postProduct({
     });
 }
 
-export function putProduct({
+export function postMasterOrder(body: ICreateMasterOrder) {
+  return app
+    .post(`/master-order`, body)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+}
+
+export function putMasterOrder({
+  client_id,
+  date,
+  shipping,
   id,
-  name,
-  price,
-  category_id,
-  available,
-}: IChangeProduct) {
+}: IChangeMasterOrder) {
   return app
-    .put(`/product/${id}`, { name, price, category_id, available })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      return error.response.data;
-    });
-}
-
-export function getProduct({ id }: { id: string }) {
-  return app
-    .get(`/product/${id}`)
+    .put(`/master-order/${id}`, { client_id, date, shipping })
     .then((response) => {
       return response.data;
     })

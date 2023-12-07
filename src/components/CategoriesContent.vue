@@ -59,7 +59,7 @@ import Title from "@/components/Title.vue";
 import TableOptions from "@/components/TableOptions.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
 import Content from "@/layouts/Content.vue";
-import { deleteCategory, getAllCategories } from "@/services/routes";
+import { deleteCategory, getAllCategories } from "@/services";
 import { IGetAllCategoriesData } from "@/interfaces";
 import { formatDate } from "@/utils";
 import { useToast } from "vue-toastification";

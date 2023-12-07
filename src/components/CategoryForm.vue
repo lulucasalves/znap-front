@@ -1,6 +1,6 @@
 <template>
   <Content>
-    <Title class="mb-10" text="Categorias" />
+    <Title class="mb-10" :text="id ? 'Editar categoria' : 'Criar categoria'" />
     <div @click="returnTable" class="return">
       <v-icon> mdi-arrow-collapse-left </v-icon>
       <p>Voltar</p>
@@ -38,7 +38,7 @@
 <script lang="ts">
 import Title from "@/components/Title.vue";
 import Content from "@/layouts/Content.vue";
-import { getCategory, postCategory, putCategory } from "@/services/routes";
+import { getCategory, postCategory, putCategory } from "@/services";
 import { useToast } from "vue-toastification";
 
 export default {

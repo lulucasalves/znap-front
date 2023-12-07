@@ -1,6 +1,6 @@
 <template>
   <Content>
-    <Title class="mb-10" text="Clientes" />
+    <Title class="mb-10" :text="id ? 'Editar cliente' : 'Criar cliente'" />
     <div @click="returnTable" class="return">
       <v-icon> mdi-arrow-collapse-left </v-icon>
       <p>Voltar</p>
@@ -52,7 +52,7 @@
 <script lang="ts">
 import Title from "@/components/Title.vue";
 import Content from "@/layouts/Content.vue";
-import { getClient, postClient, putClient } from "@/services/routes";
+import { getClient, postClient, putClient } from "@/services";
 import { useToast } from "vue-toastification";
 
 export default {
@@ -64,6 +64,7 @@ export default {
       email: "",
       phone: "",
       loading: false,
+
       rules: {
         name: [
           (value: string) => {

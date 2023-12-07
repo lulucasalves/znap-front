@@ -1,11 +1,10 @@
 import {
   IGetAllCategories,
-  IGetCategory,
   IPostCategory,
   IPutCategory,
   IRequestGetList,
 } from "@/interfaces";
-import { app } from "../app";
+import { app } from "./app";
 
 export function getAllCategories({
   limit,
@@ -80,7 +79,7 @@ export function putCategory({ name, available, id }: IPutCategory) {
     });
 }
 
-export function getCategory({ id }: IGetCategory) {
+export function getCategory({ id }: { id: string }) {
   return app
     .get(`/category/${id}`)
     .then((response) => {

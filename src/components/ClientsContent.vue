@@ -59,7 +59,7 @@ import Title from "@/components/Title.vue";
 import TableOptions from "@/components/TableOptions.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
 import Content from "@/layouts/Content.vue";
-import { deleteClient, getAllClients } from "@/services/routes";
+import { deleteClient, getAllClients } from "@/services";
 import { IGetAllClientsData } from "@/interfaces";
 import { formatDate } from "@/utils";
 import { useToast } from "vue-toastification";

@@ -22,7 +22,3 @@ export interface IPutCategory {
   name: string;
   available: boolean;
 }
-
-export interface IGetCategory {
-  id: string;
-}

@@ -67,6 +67,28 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/master-orders",
+    component: () => import("@/layouts/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "master-orders",
+        component: () => import("@/views/MasterOrders.vue"),
+      },
+    ],
+  },
+  {
+    path: "/master-order/:id",
+    component: () => import("@/layouts/Default.vue"),
+    children: [
+      {
+        path: "",
+        name: "master-order",
+        component: () => import("@/views/MasterOrderForm.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({

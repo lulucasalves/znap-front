@@ -1,20 +1,20 @@
 import {
-  IChangeClient,
-  ICreateClient,
-  IGetAllClients,
-  IGetClient,
-  IRequestGetList,
+  IChangeProduct,
+  ICreateProduct,
+  IGetAllProducts,
+  IRequestGetListProducts,
 } from "@/interfaces";
-import { app } from "../app";
+import { app } from "./app";
 
-export function getAllClients({
+export function getAllProducts({
   limit,
   page,
   sort,
   order,
   filter,
-}: IRequestGetList) {
-  let router = `/clients?page=${page}`;
+  categories,
+}: IRequestGetListProducts) {
+  let router = `/products?page=${page}`;
 
   if (limit) {
     router += `&&limit=${limit}`;
@@ -32,8 +32,12 @@ export function getAllClients({
     router += `&&filter=${filter}`;
   }
 
+  if (categories.length) {
+    router += `&&categories=${categories.join(",")}`;
+  }
+
   return app
-    .get<IGetAllClients>(router)
+    .get<IGetAllProducts>(router)
     .then((response) => {
       return response.data;
     })
@@ -42,9 +46,9 @@ export function getAllClients({
     });
 }
 
-export function deleteClient(id: string) {
+export function deleteProduct(id: string) {
   return app
-    .delete(`/client/${id}`)
+    .delete(`/product/${id}`)
     .then((response) => {
       return response.data;
     })
@@ -53,9 +57,14 @@ export function deleteClient(id: string) {
     });
 }
 
-export function postClient({ name, email, phone }: ICreateClient) {
+export function postProduct({
+  name,
+  price,
+  category_id,
+  available,
+}: ICreateProduct) {
   return app
-    .post(`/client`, { name, email, phone })
+    .post(`/product`, { name, price, category_id, available })
     .then((response) => {
       return response.data;
     })
@@ -64,9 +73,15 @@ export function postClient({ name, email, phone }: ICreateClient) {
     });
 }
 
-export function putClient({ name, email, phone, id }: IChangeClient) {
+export function putProduct({
+  id,
+  name,
+  price,
+  category_id,
+  available,
+}: IChangeProduct) {
   return app
-    .put(`/client/${id}`, { name, email, phone })
+    .put(`/product/${id}`, { name, price, category_id, available })
     .then((response) => {
       return response.data;
     })
@@ -75,9 +90,9 @@ export function putClient({ name, email, phone, id }: IChangeClient) {
     });
 }
 
-export function getClient({ id }: IGetClient) {
+export function getProduct({ id }: { id: string }) {
   return app
-    .get(`/client/${id}`)
+    .get(`/product/${id}`)
     .then((response) => {
       return response.data;
     })
