@@ -1,14 +1,16 @@
 <template>
-  <v-navigation-drawer app>
-    <div
-      :class="{
-        'znap-div': true,
-      }"
-    >
+  <v-app-bar app class="pl-5" elevation="0" border>
+    <div :class="{ 'znap-div': true, mobile: $vuetify.display.mdAndDown }">
+      <template v-if="$vuetify.display.mdAndDown">
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      </template>
+
       <img
         src="https://znap.com.br/wp-content/themes/znap/images/logos/logo-positiva.png"
       />
     </div>
+  </v-app-bar>
+  <v-navigation-drawer app v-model="drawer" v-model:mini-variant="mini">
     <v-list class="mt-5">
       <v-list-item-group>
         <v-list-item
@@ -35,6 +37,8 @@
 export default {
   data() {
     return {
+      drawer: true,
+      mini: false,
       menuItems: [
         {
           title: "Clientes",
@@ -79,19 +83,23 @@ export default {
   gap: 15px;
 }
 
+.v-list-item__overlay {
+  background: blue;
+}
+
 .znap-div {
   padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+  gap: 20px;
 }
 
 .znap-div img {
-  height: 50px;
+  height: 30px;
 }
 
-.v-list-item__overlay {
-  background: blue;
+.mobile {
+  padding: 0px;
 }
 </style>

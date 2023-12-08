@@ -44,3 +44,14 @@
     align-items: center;
     gap: 15px;
 }
+
+.double-input {
+
+    @media (max-width: 768px) {
+        display: block !important;
+    }
+}
+
+.filter {
+    margin-bottom: 10px;
+}
