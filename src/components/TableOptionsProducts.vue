@@ -23,7 +23,7 @@
           height="40px"
           color="primary"
           variant="tonal"
-          @click="changeCategories"
+          @click="categoriesSend"
         >
           Filtrar
         </v-btn>

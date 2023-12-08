@@ -21,6 +21,37 @@ export interface IGetAllMasterOrdersData {
   average_price: string;
 }
 
+export interface IGetMasterOrdersData {
+  updated_at?: string;
+  id?: string;
+  shipping?: number;
+  date?: string;
+  created_at?: string;
+  client_id?: {
+    updated_at: string;
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    created_at: string;
+  };
+  orders: {
+    updated_at: string;
+    id: string;
+    quantity: number;
+    price: number;
+    created_at: string;
+    product_id: {
+      available: boolean;
+      updated_at: string;
+      id: string;
+      name: string;
+      price: number;
+      created_at: string;
+    };
+  }[];
+}
+
 export interface IGetAllMasterOrders extends IGetList {
   data: IGetAllMasterOrdersData[];
 }

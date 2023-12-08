@@ -1,52 +1,85 @@
 <template>
   <Content>
     <Title class="mb-10" text="Detalhes do pedido" />
-    <div @click="returnTable" class="return">
-      <v-icon> mdi-arrow-collapse-left </v-icon>
-      <p>Voltar</p>
+    <DeleteModal
+      :active="modal"
+      :change-active="changeModalState"
+      :deleteAction="deleteOrderAction"
+      title="Tem certeza que deseja remover este produto do carrinho?"
+      description="Este produto será removido do pedido permanentemente!"
+    />
+    <div class="create-div">
+      <div @click="returnTable" class="return">
+        <v-icon> mdi-arrow-collapse-left </v-icon>
+        <p>Voltar</p>
+      </div>
+      <v-btn @click="create" color="primary" variant="outlined"> Criar </v-btn>
     </div>
+    <div class="d-flex w-100 justify-center" v-if="loading">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </div>
+    <div v-else-if="items.orders.length" class="cards">
+      <div class="card" v-for="(order, i) in items.orders" :key="order.id">
+        <p class="product">#{{ i + 1 }} {{ order.product_id.name }}</p>
+        <div class="card-info">
+          <p>
+            {{ order.price }}
+          </p>
+          <p>
+            Quantidade: <span>{{ order.quantity }}</span>
+          </p>
+          <div class="icons-div">
+            <div @click="editItem(order.id)" class="icon-button">
+              <v-icon> mdi-pencil-outline </v-icon>
+            </div>
+            <div @click="changeModalState(true, order.id)" class="icon-button">
+              <v-icon> mdi-trash-can-outline </v-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="d-flex w-100 justify-center" v-else-if="!items.orders.length">
+      Nenhum produto encontrado...
+    </p>
   </Content>
 </template>
 
 <script lang="ts">
 import Title from "@/components/Title.vue";
-import TableOptions from "@/components/TableOptionsMasterOrders.vue";
 import DeleteModal from "@/components/DeleteModal.vue";
 import Content from "@/layouts/Content.vue";
-import { IGetAllMasterOrdersData } from "@/interfaces";
-import { formatDate, formatMoney, formatDateOrder } from "@/utils";
+import { IGetMasterOrdersData } from "@/interfaces";
+import { formatMoney } from "@/utils";
 import { useToast } from "vue-toastification";
-import { deleteMasterOrder, getAllMasterOrders } from "@/services";
+import { deleteOrder, getMasterOrder } from "@/services";
 
 export default {
-  components: { Title, Content, TableOptions, DeleteModal },
+  components: { Title, Content, DeleteModal },
   data() {
     return {
       loading: false,
-      items: [] as IGetAllMasterOrdersData[],
+      items: { orders: [] } as IGetMasterOrdersData,
       modal: false,
       deleteId: "",
+      id: "",
     };
   },
   methods: {
     returnTable() {
       this.$router.push({ name: "master-orders" });
     },
+    create() {
+      this.$router.push({
+        name: "order",
+        params: { id: "new", master: this.items.id },
+      });
+    },
     async getData() {
       const toast = useToast();
 
       this.loading = true;
-      const data = await getAllMasterOrders({
-        limit: this.limit,
-        page: this.page,
-        sort: this.sort,
-        order: this.order,
-        categories: this.categories,
-        clients: this.clients,
-        dateFrom: this.dateFrom,
-        dateTo: this.dateTo,
-        products: this.products,
-      })
+      const data = await getMasterOrder(this.id)
         .then((res) => {
           if (res.error)
             toast.error(res.message, {
@@ -65,64 +98,21 @@ export default {
         });
 
       if (data) {
-        this.count = data.count;
-        this.limit = data.limit;
-        this.maxPages = data.maxPages;
-        this.page = data.page;
-        this.items = data.data.map((value: IGetAllMasterOrdersData) => ({
-          ...value,
-          updated_at: formatDate(value.updated_at),
-          total_price: formatMoney(parseFloat(value.total_price)),
-          average_price: formatMoney(parseFloat(value.average_price)),
-          shipping: formatMoney(value.shipping),
-          client: value.client.name,
-          total_quantity: !value.total_quantity ? "0" : value.total_quantity,
-          date: formatDateOrder(value.date),
-        }));
+        this.items = {
+          ...data,
+          orders: data.orders.map((value: any) => ({
+            ...value,
+            price: formatMoney(value.price),
+          })),
+        };
       }
     },
     editItem(id: string) {
-      this.$router.push({ name: "master-order", params: { id } });
+      this.$router.push({
+        name: "order",
+        params: { id, master: this.items.id },
+      });
     },
-    async updateTable(target: any) {
-      const proxyObject = JSON.parse(JSON.stringify(target));
-
-      if (proxyObject.sortBy.length) {
-        this.sort = proxyObject.sortBy[0].order;
-        this.order = proxyObject.sortBy[0].key;
-      } else {
-        this.sort = "";
-        this.order = "";
-      }
-
-      this.page = 1;
-      await this.getData();
-    },
-    async changePage(page: number) {
-      this.page = page;
-      await this.getData();
-    },
-    async changeLimit(limit: number) {
-      this.limit = limit;
-      this.page = 1;
-      await this.getData();
-    },
-    async changeFilter({
-      categories,
-      products,
-      clients,
-    }: {
-      products: never[];
-      categories: never[];
-      clients: never[];
-    }) {
-      this.categories = categories;
-      this.products = products;
-      this.clients = clients;
-
-      await this.getData();
-    },
-
     changeModalState(value: boolean, id: string) {
       this.modal = value;
 
@@ -130,10 +120,10 @@ export default {
         this.deleteId = id;
       }
     },
-    async deleteMasterOrderAction() {
+    async deleteOrderAction() {
       const toast = useToast();
 
-      await deleteMasterOrder(this.deleteId)
+      await deleteOrder(this.deleteId)
         .then((res) => {
           if (res.error)
             toast.error(res.message, {
@@ -157,6 +147,9 @@ export default {
     },
   },
   async mounted() {
+    const id = this.$router.currentRoute.value.params.id as string;
+
+    this.id = id;
     await this.getData();
   },
 };
@@ -172,7 +165,6 @@ export default {
   color: #ff458d;
   font-size: 14px;
   transition: 0.3s;
-  margin-bottom: 30px;
 }
 
 .return:hover {
@@ -182,5 +174,57 @@ export default {
 .return p {
   font-size: 16px;
   font-weight: 500;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+}
+
+.card {
+  display: flex;
+  border-radius: 8px;
+  background: white;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  padding: 20px 30px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.card-info {
+  display: flex;
+  align-items: center;
+}
+
+.card-info p {
+  font-size: 18px;
+  font-weight: 500;
+  margin-right: 30px;
+}
+
+.card-info p span {
+  font-weight: 400;
+}
+
+.icons-div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.create-div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
 }
 </style>

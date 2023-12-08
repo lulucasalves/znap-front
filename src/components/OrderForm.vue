@@ -1,6 +1,9 @@
 <template>
   <Content>
-    <Title class="mb-10" :text="id ? 'Editar pedido' : 'Criar pedido'" />
+    <Title
+      class="mb-10"
+      :text="id ? 'Editar produto do pedido' : 'Adicionar produto ao pedido'"
+    />
     <div @click="returnTable" class="return">
       <v-icon> mdi-arrow-collapse-left </v-icon>
       <p>Voltar</p>
@@ -10,31 +13,30 @@
         <v-text-field
           variant="filled"
           density="comfortable"
-          v-model="shipping"
-          :rules="rules.shipping"
-          :counter="20"
-          label="Preço do frete"
+          v-model="quantity"
+          :rules="rules.quantity"
+          :counter="3"
+          label="Quantidade"
           required
-          @input="maskMoney"
         />
-        <v-text-field
-          variant="filled"
+        <v-select
           density="comfortable"
-          v-model="date"
-          :rules="rules.date"
-          :counter="20"
-          label="Data do pedido"
+          label="Produtos"
+          v-model="product"
+          :items="products"
+          no-data-text="Nenhuma categoria encontrada"
           required
-          @input="maskDate"
         />
       </div>
-      <v-select
+      <v-text-field
+        variant="filled"
         density="comfortable"
-        label="Cliente"
-        v-model="client"
-        :items="clients"
-        no-data-text="Nenhum cliente encontrada"
+        v-model="price"
+        :rules="rules.price"
+        :counter="20"
+        label="Preço do produto"
         required
+        @input="maskMoney"
       />
       <div class="send-button">
         <v-btn
@@ -52,71 +54,40 @@
 <script lang="ts">
 import Title from "@/components/Title.vue";
 import Content from "@/layouts/Content.vue";
-import {
-  getAllClients,
-  getMasterOrder,
-  postMasterOrder,
-  putMasterOrder,
-} from "@/services";
+import { getAllProducts, getOrder, postOrder, putOrder } from "@/services";
 import { useToast } from "vue-toastification";
-import {
-  formatDateOrder,
-  formatDateOrderSend,
-  formatMoney,
-  getCurrentDate,
-  parseMoney,
-} from "@/utils";
-import { IGetAllClientsData } from "@/interfaces";
+import { formatMoney, parseMoney } from "@/utils";
+import { IGetAllProductsData } from "@/interfaces";
 
 export default {
   components: { Title, Content },
   data() {
     return {
       id: "",
-      date: "",
-      shipping: "",
-      client: null,
+      quantity: "1",
+      price: "",
+      product: null,
       loading: false,
-      available: true,
-      clients: [],
-      allClients: [],
+      products: [],
+      allProducts: [],
       rules: {
-        date: [
+        quantity: [
           (value: string) => {
             if (value) return true;
 
-            return "Preencha a data do pedido.";
+            return "Preencha a quantidade de produtos.";
           },
           (value: string) => {
-            try {
-              const [date, month, year] = value.split("/");
+            if (!isNaN(parseInt(value)) && value.length < 4) return true;
 
-              const adjustedMonth = parseInt(month, 10) - 1;
-
-              const testDate = new Date(
-                parseInt(year),
-                adjustedMonth,
-                parseInt(date)
-              );
-
-              const validDate =
-                testDate.getFullYear() == parseInt(year) &&
-                testDate.getMonth() == adjustedMonth &&
-                testDate.getDate() == parseInt(date);
-
-              if (date && month && year && value.length === 10 && validDate)
-                return true;
-              return "Data inválida";
-            } catch (err) {
-              return "Data inválida";
-            }
+            return "Quantidade inválida";
           },
         ],
-        shipping: [
+        price: [
           (value: string) => {
             if (value) return true;
 
-            return "Preencha o preço do frete.";
+            return "Preencha o preço do produto.";
           },
           (value: string) => {
             if (!isNaN(parseMoney(value))) return true;
@@ -137,11 +108,11 @@ export default {
     },
     async sendData() {
       const toast = useToast();
-      const client_id = this.allClients
-        .filter((value: IGetAllClientsData) => this.client === value.name)
-        .map((value: IGetAllClientsData) => value.id)[0];
-      const shipping = parseMoney(this.shipping);
-      const date = formatDateOrderSend(this.date);
+      const price = parseMoney(this.price);
+      const quantity = parseMoney(this.quantity);
+      const product_id = this.allProducts
+        .filter((value: IGetAllProductsData) => value.name === this.product)
+        .map((value: IGetAllProductsData) => value.id)[0];
 
       await this.$refs.form
         .validate()
@@ -150,31 +121,34 @@ export default {
             this.loading = true;
 
             if (!this.id) {
-              await postMasterOrder({
-                shipping,
-                client_id,
-                date,
+              await postOrder({
+                product_id,
+                price,
+                quantity,
+                master_order_id: this.$router.currentRoute.value.params.master as string,
               })
                 .then((res) => {
                   if (res.error) this.errorMessage(res.message);
                   else {
-                    toast.success("Pedido criado com sucesso!", {
+                    toast.success("Produto do pedido criado com sucesso!", {
                       timeout: 2000,
                     });
                     this.$router.push({
                       name: "orders",
-                      params: { id: res.id },
+                      params: {
+                        id: this.$router.currentRoute.value.params.master,
+                      },
                     });
                   }
                 })
                 .catch((error) => this.errorMessage(error.message))
                 .finally(() => (this.loading = false));
             } else {
-              await putMasterOrder({
+              await putOrder({
                 id: this.id,
-                shipping,
-                client_id,
-                date,
+                product_id,
+                price,
+                quantity,
               })
                 .then((res) => {
                   if (res.error) this.errorMessage(res.message);
@@ -182,7 +156,12 @@ export default {
                     toast.success("Pedido atualizado com sucesso!", {
                       timeout: 2000,
                     });
-                    this.$router.push({ name: "master-orders" });
+                    this.$router.push({
+                      name: "orders",
+                      params: {
+                        id: this.$router.currentRoute.value.params.master,
+                      },
+                    });
                   }
                 })
                 .catch((error) => this.errorMessage(error.message))
@@ -192,13 +171,16 @@ export default {
         });
     },
     returnTable() {
-      this.$router.push({ name: "master-orders" });
+      this.$router.push({
+        name: "orders",
+        params: { id: this.$router.currentRoute.value.params.master },
+      });
     },
     maskMoney(value: any) {
       const numericValue = value.target.value.replace(/\D/g, "");
 
       if (!numericValue) {
-        this.shipping = "";
+        this.price = "";
         return;
       }
 
@@ -208,36 +190,21 @@ export default {
         currency: "BRL",
       }).format(intValue / 100);
 
-      this.shipping = formattedValue;
-    },
-    maskDate(value: any) {
-      const dateValue = value.target.value.replace(/\D/g, "");
-
-      if (!dateValue) {
-        this.date = "";
-        return;
-      }
-
-      const formattedDate = (date: string) => {
-        const day = date.substring(0, 2);
-        const month = date.substring(2, 4);
-        const year = date.substring(4, 8);
-        return `${day}/${month}/${year}`;
-      };
-
-      this.date = formattedDate(dateValue);
+      this.price = formattedValue;
     },
   },
+
   async mounted() {
     const id = this.$router.currentRoute.value.params.id as string;
     const toast = useToast();
     this.loading = true;
 
-    const dataClient = await getAllClients({
+    const dataProduct = await getAllProducts({
       page: 1,
       limit: 1000,
       sort: "asc",
       order: "name",
+      categories: [],
     })
       .then((res) => {
         if (res.error)
@@ -254,16 +221,16 @@ export default {
       })
       .finally(() => (this.loading = false));
 
-    this.allClients = dataClient.data;
-    this.clients = dataClient.data.map((val: IGetAllClientsData) => val.name);
-    this.client = this.clients[0];
-    this.date = getCurrentDate();
+    this.allProducts = dataProduct.data;
+    this.products = dataProduct.data
+      .filter((val: IGetAllProductsData) => val.available)
+      .map((val: IGetAllProductsData) => val.name);
 
     if (id !== "new") {
       this.id = id;
       this.loading = true;
 
-      const data = await getMasterOrder(this.id)
+      const data = await getOrder(this.id)
         .then((res) => {
           if (res.error) this.errorMessage(res.message);
           return res;
@@ -271,12 +238,23 @@ export default {
         .catch((error) => this.errorMessage(error.message))
         .finally(() => (this.loading = false));
 
-      this.shipping = formatMoney(data.shipping);
-      this.client = dataClient.data.filter(
-        (value: IGetAllClientsData) => value.id === data.client_id.id
+      this.quantity = String(data.quantity);
+      this.product = dataProduct.data.filter(
+        (value: IGetAllProductsData) => value.id === data.product_id.id
       )[0].name;
-      this.date = formatDateOrder(data.date);
+      this.price = formatMoney(data.price);
+    } else {
+      this.product = this.products[0];
     }
+  },
+  watch: {
+    product(target, last) {
+      const productPrice = this.allProducts.filter(
+        (value) => value.name === target
+      )[0];
+
+      if (last || !this.id) this.price = formatMoney(productPrice.price);
+    },
   },
 };
 </script>

@@ -12,5 +12,6 @@ module.exports = {
     "vue/multi-word-component-names": "off",
     "vue/no-reserved-component-names": "off",
     "vue/valid-v-slot": "off",
+    "vue/no-use-v-if-with-v-for": "off",
   },
 };

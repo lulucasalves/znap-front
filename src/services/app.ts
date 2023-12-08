@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from "axios";
 
-console.log(process.env);
 export const app: AxiosInstance = axios.create({
   baseURL:
     process.env.NODE_ENV === "development"
