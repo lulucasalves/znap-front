@@ -32,6 +32,7 @@
         density="comfortable"
         label="Cliente"
         v-model="client"
+        :rules="rules.client"
         :items="clients"
         no-data-text="Nenhum cliente encontrada"
         required
@@ -122,6 +123,13 @@ export default {
             if (!isNaN(parseMoney(value))) return true;
 
             return "Preço inválido.";
+          },
+        ],
+        client: [
+          (value: string) => {
+            if (value) return true;
+
+            return "É necessário adicionar um cliente para criar o pedido.";
           },
         ],
       },

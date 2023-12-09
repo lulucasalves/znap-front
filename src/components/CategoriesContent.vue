@@ -17,6 +17,7 @@
     />
     <v-data-table
       :items="items"
+      style="white-space: nowrap"
       loading-text="Buscando dados..."
       item-value="id"
       sort-desc-icon="mdi-menu-down"
@@ -124,7 +125,7 @@ export default {
         this.items = data.data.map((value: IGetAllCategoriesData) => ({
           ...value,
           updated_at: formatDate(value.updated_at),
-          available: value.available ? "Ativo" : "Não ativo",
+          available: value.available ? "Disponível" : "Não disponível",
         }));
       }
     },

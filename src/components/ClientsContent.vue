@@ -17,6 +17,7 @@
     />
     <v-data-table
       :items="items"
+      style="white-space: nowrap"
       loading-text="Buscando dados..."
       item-value="id"
       sort-desc-icon="mdi-menu-down"

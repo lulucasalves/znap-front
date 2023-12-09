@@ -21,8 +21,9 @@
         />
         <v-select
           density="comfortable"
-          label="Produtos"
+          label="Produto"
           v-model="product"
+          :rules="rules.product"
           :items="products"
           no-data-text="Nenhuma categoria encontrada"
           required
@@ -95,6 +96,13 @@ export default {
             return "Preço inválido.";
           },
         ],
+        product: [
+          (value: string) => {
+            if (value) return true;
+
+            return "É necessário adicionar um produto para adicionar o produto.";
+          },
+        ],
       },
     };
   },
@@ -125,7 +133,8 @@ export default {
                 product_id,
                 price,
                 quantity,
-                master_order_id: this.$router.currentRoute.value.params.master as string,
+                master_order_id: this.$router.currentRoute.value.params
+                  .master as string,
               })
                 .then((res) => {
                   if (res.error) this.errorMessage(res.message);

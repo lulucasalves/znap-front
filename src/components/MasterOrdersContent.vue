@@ -18,13 +18,14 @@
     <v-data-table
       v-model="selectedItems"
       :items="items"
+      style="white-space: nowrap"
       loading-text="Buscando dados..."
       item-value="id"
       sort-desc-icon="mdi-menu-down"
       sort-asc-icon="mdi-menu-up"
       items-per-page-text="Items por página"
       :items-per-page="100"
-      no-data-text="Nenhum produto encontrado"
+      no-data-text="Nenhum pedido encontrado"
       :loading="loading"
       :headers="headers"
       show-select

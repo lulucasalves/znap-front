@@ -1,10 +1,7 @@
 <template>
   <v-app-bar app class="pl-5" elevation="0" border>
-    <div :class="{ 'znap-div': true, mobile: $vuetify.display.mdAndDown }">
-      <template v-if="$vuetify.display.mdAndDown">
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      </template>
-
+    <div :class="{ 'znap-div': true }">
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <img
         src="https://znap.com.br/wp-content/themes/znap/images/logos/logo-positiva.png"
       />
@@ -73,6 +70,9 @@ export default {
       this.router = value.name;
     },
   },
+  mounted() {
+    if (this.$vuetify.display.mdAndDown) this.drawer = false;
+  },
 };
 </script>
 
@@ -88,7 +88,6 @@ export default {
 }
 
 .znap-div {
-  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -97,9 +96,5 @@ export default {
 
 .znap-div img {
   height: 30px;
-}
-
-.mobile {
-  padding: 0px;
 }
 </style>

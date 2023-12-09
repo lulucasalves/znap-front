@@ -44,6 +44,8 @@ export default {
   padding: 0 20px;
   transition: 0.3s;
   animation: showReport 0.5s forwards;
+  white-space: nowrap;
+  overflow-x: scroll;
 }
 
 @keyframes showReport {
@@ -76,5 +78,6 @@ td,
 th {
   text-align: center;
   width: 25%;
+  min-width: 120px;
 }
 </style>

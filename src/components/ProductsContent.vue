@@ -19,6 +19,7 @@
       :items="items"
       loading-text="Buscando dados..."
       item-value="id"
+      style="white-space: nowrap"
       sort-desc-icon="mdi-menu-down"
       sort-asc-icon="mdi-menu-up"
       items-per-page-text="Items por página"
@@ -127,7 +128,7 @@ export default {
           ...value,
           updated_at: formatDate(value.updated_at),
           price: formatMoney(value.price),
-          available: value.available ? "Ativo" : "Não ativo",
+          available: value.available ? "Disponível" : "Não disponível",
           category: value.category_id.name,
         }));
       }

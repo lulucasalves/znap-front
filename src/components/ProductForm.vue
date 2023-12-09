@@ -19,7 +19,7 @@
         <v-switch
           color="primary"
           v-model="available"
-          :label="`Status ${available ? 'Ativo' : 'Não ativo'}`"
+          :label="`Status ${available ? 'Disponível' : 'Não disponível'}`"
         />
       </div>
       <div class="double-input">
@@ -35,8 +35,9 @@
         />
         <v-select
           density="comfortable"
-          label="Categorias"
+          label="Categoria"
           v-model="category"
+          :rule="rules.category"
           :items="categories"
           no-data-text="Nenhuma categoria encontrada"
           required
@@ -103,6 +104,13 @@ export default {
             if (!isNaN(parseMoney(value))) return true;
 
             return "Preço inválido.";
+          },
+        ],
+        category: [
+          (value: string) => {
+            if (value) return true;
+
+            return "É necessário adicionar uma categoria para criar o produto.";
           },
         ],
       },

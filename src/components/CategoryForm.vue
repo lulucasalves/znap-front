@@ -19,7 +19,7 @@
         <v-switch
           color="primary"
           v-model="available"
-          :label="`Status ${available ? 'Ativo' : 'Não ativo'}`"
+          :label="`Status ${available ? 'Disponível' : 'Não disponível'}`"
         ></v-switch>
       </div>
       <div class="send-button">
