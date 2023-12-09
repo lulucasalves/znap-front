@@ -1,69 +1,52 @@
-# base
 
-## Project setup
+# Projeto Znap Frontend
 
-```
-# yarn
-yarn
+Este é um teste para desenvolvedor pleno na empresa Znap, serão passadas as instruções para inicialização do servidor.
 
-# npm
-npm install
+A versão em que foi desenvolvida o projeto foi com  Node: `v20.6.1` e NPM `v9.8.1` é recomendavel utilizar estas versões para iniciar o servidor.
 
-# pnpm
-pnpm install
+Ele está configurado para fazer requisições por padrão em `http://localhost:8080` e precisa do servidor [backend](https://github.com/lulucasalves/znap-back) ativo para iniciar a aplicação.
 
-# bun
-bun install
+### Clonando projeto
+```bash
+    git clone git@github.com:lulucasalves/znap-front.git
 ```
 
-### Compiles and hot-reloads for development
-
+### Instalando dependências
+```bash
+    npm install
 ```
-# yarn
-yarn dev
-
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# bun
-pnpm run dev
+```bash
+    yarn
 ```
 
-### Compiles and minifies for production
-
+### Iniciando projeto
+```bash
+    npm run dev
 ```
-# yarn
-yarn build
-
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# bun
-pnpm run build
+```bash
+    yarn dev
 ```
 
-### Lints and fixes files
+### Utilizando o docker
+É possível iniciar o projeto usando o `Docker` ou o `Docker Compose`
 
-```
-# yarn
-yarn lint
+#### Docker
+```bash
+    docker build -t znap-front .
 
-# npm
-npm run lint
+    # servidor em primeiro plano
+    docker run -p 3000:3000 znap-front
 
-# pnpm
-pnpm lint
-
-# bun
-pnpm run lint
+    # servidor em segundo plano
+    docker run -d -p 3000:3000 znap-front
 ```
 
-### Customize configuration
+#### Docker Compose
+```bash
+    # servidor em primeiro plano
+    docker-compose up
 
-See [Configuration Reference](https://vitejs.dev/config/).
+    # servidor em segundo plano
+    docker-compose up -d
+```
