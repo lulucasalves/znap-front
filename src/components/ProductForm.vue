@@ -28,7 +28,7 @@
           density="comfortable"
           v-model="price"
           :rules="rules.price"
-          :counter="20"
+          :counter="13"
           label="Preço do produto"
           required
           @input="maskMoney"
@@ -104,6 +104,11 @@ export default {
             if (!isNaN(parseMoney(value))) return true;
 
             return "Preço inválido.";
+          },
+          (value: string) => {
+            if (value.length < 14) return true;
+
+            return "O preço não pode ser maior que R$ 999.999,99";
           },
         ],
         category: [

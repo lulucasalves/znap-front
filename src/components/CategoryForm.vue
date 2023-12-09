@@ -12,7 +12,7 @@
           density="comfortable"
           v-model="name"
           :rules="rules.name"
-          :counter="30"
+          :counter="20"
           label="Nome da categoria"
           required
         />
@@ -57,9 +57,9 @@ export default {
             return "Preencha o nome do cliente.";
           },
           (value: string) => {
-            if (value?.length <= 30) return true;
+            if (value?.length <= 20) return true;
 
-            return "O nome não pode possuir mais de 30 caracteres.";
+            return "O nome não pode possuir mais de 20 caracteres.";
           },
         ],
       },

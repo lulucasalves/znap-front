@@ -34,7 +34,7 @@
         density="comfortable"
         v-model="price"
         :rules="rules.price"
-        :counter="20"
+        :counter="13"
         label="Preço do produto"
         required
         @input="maskMoney"
@@ -79,9 +79,14 @@ export default {
             return "Preencha a quantidade de produtos.";
           },
           (value: string) => {
-            if (!isNaN(parseInt(value)) && value.length < 4) return true;
+            if (!isNaN(parseInt(value))) return true;
 
             return "Quantidade inválida";
+          },
+          (value: string) => {
+            if (value.length < 4) return true;
+
+            return "A quantidade não pode ser maior que 999";
           },
         ],
         price: [
@@ -94,6 +99,11 @@ export default {
             if (!isNaN(parseMoney(value))) return true;
 
             return "Preço inválido.";
+          },
+          (value: string) => {
+            if (value.length < 14) return true;
+
+            return "O preço não pode ser maior que R$ 999.999,99";
           },
         ],
         product: [

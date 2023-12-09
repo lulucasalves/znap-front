@@ -198,6 +198,8 @@ export default {
 .product {
   font-size: 24px;
   font-weight: 500;
+  word-break: break-all;
+  margin-right: 10px;
 }
 
 .card-info {
@@ -226,5 +228,21 @@ export default {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
+}
+
+@media (max-width: 500px) {
+  .card {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .card-info {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .card-info p {
+    margin-right: 0;
+  }
 }
 </style>

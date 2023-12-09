@@ -12,7 +12,7 @@
           density="comfortable"
           v-model="shipping"
           :rules="rules.shipping"
-          :counter="20"
+          :counter="13"
           label="Preço do frete"
           required
           @input="maskMoney"
@@ -22,7 +22,6 @@
           density="comfortable"
           v-model="date"
           :rules="rules.date"
-          :counter="20"
           label="Data do pedido"
           required
           @input="maskDate"
@@ -123,6 +122,11 @@ export default {
             if (!isNaN(parseMoney(value))) return true;
 
             return "Preço inválido.";
+          },
+          (value: string) => {
+            if (value.length < 14) return true;
+
+            return "O preço não pode ser maior que R$ 999.999,99";
           },
         ],
         client: [

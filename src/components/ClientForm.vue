@@ -12,7 +12,7 @@
           density="comfortable"
           v-model="name"
           :rules="rules.name"
-          :counter="30"
+          :counter="20"
           label="Nome do cliente"
           required
         />
@@ -31,9 +31,9 @@
         variant="filled"
         density="comfortable"
         type="email"
+        :counter="30"
         v-model="email"
         :rules="rules.email"
-        :counter="30"
         label="E-mail do cliente"
       />
       <div class="send-button">
@@ -73,17 +73,12 @@ export default {
             return "Preencha o nome do cliente.";
           },
           (value: string) => {
-            if (value?.length <= 30) return true;
+            if (value?.length <= 20) return true;
 
-            return "O nome não pode possuir mais de 30 caracteres.";
+            return "O nome não pode possuir mais de 20 caracteres.";
           },
         ],
         phone: [
-          (value: string) => {
-            if (value?.length <= 15) return true;
-
-            return "O celular não pode possuir mais de 15 caracteres!";
-          },
           (value: string) => {
             if (value?.length === 0 || value.length === 15) return true;
 
